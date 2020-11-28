@@ -1,0 +1,13 @@
+{
+  "name": "srs",
+  "version": "0.0.0",
+  "description": "SRS",
+  "main": "app.js",
+  "author": {
+    "name": ""
+  },
+  "dependencies": {
+    "linebot": "^1.6.1",
+    "mongodb": "^3.6.3"
+  }
+}
