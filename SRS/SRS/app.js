@@ -3,8 +3,8 @@
 // 引用linebot SDK
 var linebot = require('linebot');
 var MongoClient = require('mongodb').MongoClient;
-//var mongoURL = 'mongodb://localhost:27017/mymondb';
-var mongoURL = 'mongodb + srv://leon1234858:8ntscpal@cluster0.gyixj.gcp.mongodb.net/army?retryWrites=true&w=majority'
+var mongoURL = 'mongodb://localhost:27017/mymondb';
+//var mongoURL = 'mongodb + srv://leon1234858:8ntscpal@cluster0.gyixj.gcp.mongodb.net/army?retryWrites=true&w=majority'
 // 用於辨識Line Channel的資訊
 var bot = linebot({
     channelId: '1655283191',
@@ -12,9 +12,9 @@ var bot = linebot({
     channelAccessToken: 'Z7EmDYofn6ew+StzJhHWHJFAfZ5oXwTLHnHKNwluQ/5UFFbdIyQvAv8F9q/sZcZtiPo66WhuhVr0omHoPEYAACMMwKA9wJKTI0gKQJSbCUeRbu3Qciql+YkjnPlXFXlYDwLEqYjyCXVahFSdG9HYDwdB04t89/1O/w1cDnyilFU='
 });
 
-function saveMessage(db, name, date, thing) {
+function saveMessage(db, name, date, thing,order) {
     return new Promise((resolve, reject) => {
-        db.db("army").collection('solidersData').updateOne({ $and: [{ name: name }, { date: date }] }, { $set: { name: name, date: date, thing: thing } }, { upsert: true },
+        db.db("army").collection('solidersData').updateOne({ $and: [{ name: name }, { date: date }] }, { $set: { name: name, date: date, thing: thing, order: order } }, { upsert: true },
             function (err, result) {
                 if (err)
                     reject("error");
@@ -26,7 +26,7 @@ function saveMessage(db, name, date, thing) {
 
 function signUp(db, name, nickName) {
     return new Promise((resolve, reject) => {
-        db.db("army").collection('soliders').updateOne({ $and: [{ name: name }, { nickName: nickName }] }, { $set: { name: name, nickName: nickName } }, { upsert: true },
+        db.db("army").collection('soliders').updateOne({ $and: [{ name: name }, { nickName: nickName }] }, { $set: { name: name, nickName: nickName, order: parseInt(nickName) } }, { upsert: true },
             function (err, result) {
                 if (err)
                     reject("error");
@@ -61,14 +61,14 @@ function nickNameToName(db, nickName) {
                     if (result == null)
                         reject("no exist this nickname");
                     else
-                        resolve(result.name);
+                        resolve({ name: result.name, order: result.order });
             })
     });
 }
 
 function getList(db, date) {
     return new Promise((resolve, reject) => {
-        db.db("army").collection('solidersData').find({ date: date }).toArray(
+        db.db("army").collection('solidersData').find({ date: date }).sort({ order: 1 }).toArray(
             function (err, result) {
                 if (err)
                     reject("error");
@@ -103,7 +103,7 @@ function serverAction(list, db, say, event) {
             for (var i = 4; i < list.length; i++)
                 thing += list[i];
             nickNameToName(db, list[2])
-                .then(name => { saveMessage(db, name, (parseInt(dt.getFullYear()) - 1911).toString() + "/" + dt.getMonth().toString() + "/" + dt.getDate().toString() + " " + list[3], thing) })
+                .then(pkg => { saveMessage(db, pkg.name, (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + list[3], thing,pkg.order) })
                 .then(pkg => { say = "存儲成功"; reply(say, event); })
                 .catch(error => { say = error; reply(say, event); })
             break;
@@ -142,7 +142,16 @@ bot.on('message', function (event) {
                     console.log(error);
                 });
             } else
-                serverAction(list, db, say, event);
+                try {
+                    serverAction(list, db, say, event);
+                } catch (e) {
+                    event.reply("你指令打錯了喔, 請檢查一下有沒有多打空白鍵").then(function (data) {
+                        // 當訊息成功回傳後的處理
+                    }).catch(function (error) {
+                        // 當訊息回傳失敗後的處理
+                        console.log(error);
+                    });
+                }
         });
     }
 });
