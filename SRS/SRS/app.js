@@ -3,8 +3,8 @@
 // 引用linebot SDK
 var linebot = require('linebot');
 var MongoClient = require('mongodb').MongoClient;
-var mongoURL = 'mongodb://localhost:27017/mymondb';
-
+//var mongoURL = 'mongodb://localhost:27017/mymondb';
+var mongoURL = 'mongodb + srv://leon1234858:8ntscpal@cluster0.gyixj.gcp.mongodb.net/army?retryWrites=true&w=majority'
 // 用於辨識Line Channel的資訊
 var bot = linebot({
     channelId: '1655283191',
