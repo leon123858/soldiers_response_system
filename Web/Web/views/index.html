@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>放假回報</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div name="Title" class="jumbotron  mb-0 ">
+            <div class="text-center  align-self-center">
+                <h1>放假回報</h1>
+            </div>
+        </div>
+    </header>
+    <div class="container" style="font-family:Microsoft JhengHei;font-size:150%">
+        <div id="input" style="text-align:center">
+            <label>請輸入你的學號末兩碼</label>
+            <input type="number" id="number" min="17" max="32" required>
+            <br>
+            <label>回報時間</label>
+            <select id="select">
+                <option value="11時回報">11時回報</option>
+                <option value="19時回報">19時回報</option>
+                <option value="14時回報">14時回報</option>
+                <option value="到家回報">到家回報</option>
+            </select>
+            <br>
+            <input type="text" id="text" placeholder="請輸入回報內容">
+            <button id="send">傳送</button>
+            <pre id="include"></pre>
+            <button id="duplicate">複製</button>
+            <button id="refresh">刷新</button>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var dt = new Date();
+            var now = dt.getHours();
+            var select = document.getElementById("select");
+            if (now <= 12)
+                select.options[0].selected = true;
+            else if (now <= 15)
+                select.options[2].selected = true;
+            else 
+                select.options[1].selected = true;
+            if (localStorage.getItem("num"))
+                $("#number").val(localStorage.getItem("num"));
+            $.post("/refresh", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
+                $("pre").html(result);
+            })
+            $("#send").click(function () {
+                $.post("/send", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val(), who: $("#number").val().toString(), what: $("#text").val()}, function (result) {
+                    $.post("/refresh", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
+                        $("pre").html(result);
+                        $("#text").val('');
+                    })
+                })
+                localStorage.setItem("num", $("#number").val().toString());
+            });
+            $("#refresh").click(function () {
+                $.post("/refresh", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
+                    $("pre").html(result);
+                })
+            });
+            function Copy(str) {
+                var clip_area = document.createElement('textarea');
+                clip_area.textContent = str;
+                document.body.appendChild(clip_area);
+                clip_area.select();
+                document.execCommand('copy');
+                clip_area.remove();
+                alert("已複製好，可黏貼");
+            }
+            $("#duplicate").click(function () {
+                Copy($("pre").html());
+            })
+            $("select").change(function () {
+                $.post("/refresh", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
+                    $("pre").html(result);
+                })
+            });
+        })
+    </script>
+</body>
+
+</html>
