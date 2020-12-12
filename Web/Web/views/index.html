@@ -20,7 +20,7 @@
     <div class="container" style="font-family:Microsoft JhengHei;font-size:100%">
         <div id="input" style="text-align:center">
             <label>請輸入你的學號末兩碼</label>
-            <input type="number" id="number" min="17" max="32" required>
+            <input type="number" id="number" min="17" max="32" maxlength="2" required>
             <br>
             <label>回報時間</label>
             <select id="select">
@@ -54,13 +54,17 @@
                 $("pre").html(result);
             })
             $("#send").click(function () {
-                $.post("/send", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val(), who: $("#number").val().toString(), what: $("#text").val()}, function (result) {
-                    $.post("/refresh", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
-                        $("pre").html(result);
-                        $("#text").val('');
+                if (parseInt($("#number").val()) >= 17 && parseInt($("#number").val()) <= 32) {
+                    $.post("/send", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val(), who: parseInt($("#number").val()).toString(), what: $("#text").val() }, function (result) {
+                        $.post("/refresh", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
+                            $("pre").html(result);
+                            $("#text").val('');
+                        })
                     })
-                })
-                localStorage.setItem("num", $("#number").val().toString());
+                    localStorage.setItem("num", $("#number").val().toString());
+                } else {
+                    alert('請檢查你的學號是否輸入正確');
+                }
             });
             $("#refresh").click(function () {
                 $.post("/refresh", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
