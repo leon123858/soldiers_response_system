@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>放假回報</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div name="Title" class="jumbotron  mb-0 ">
+            <div class="text-center  align-self-center">
+                <h1>放假回報</h1>
+            </div>
+        </div>
+    </header>
+    <div class="container" style="font-family:Microsoft JhengHei;font-size:100%">
+        <div id="input" style="text-align:center">
+            <label>請輸入你的班級代號</label>
+            <input id="classToken" type="text" />
+            <input id="jumpPage" type="button" value="進入班級回報版" />
+            <br>
+            <hr />
+            <label>新增班級回報版</label>
+            <br>
+            <p>班級代號規則 -> ex:3B1C2H16 => x(營)Bx(連)Cx(班)Hx(人數)。</p>
+            <input type="text" id="newClassToken" placeholder="請輸入班級代號"><br>
+            <label>請按照順序輸入班級內所有成員的座號(左)及資訊(右)</label><br>
+            <div style="display:none">01.<input id="n1" type="text" placeholder="ex:1"/><input type="text" id="s1" placeholder="ex:31001 王大明"><br></div>
+            <div style="display:none">02.<input id="n2" type="text" placeholder="ex:2" /><input type="text" id="s2" placeholder="ex:31002 王大明"><br></div>
+            <div style="display:none">03.<input id="n3" type="text" placeholder="ex:3" /><input type="text" id="s3" placeholder="ex:31003 王大明"><br></div>
+            <div style="display:none">04.<input id="n4" type="text" placeholder="ex:4" /><input type="text" id="s4" placeholder="ex:31004 王大明"><br></div>
+            <div style="display:none">05.<input id="n5" type="text" placeholder="ex:5" /><input type="text" id="s5" placeholder="ex:31005 王大明"><br></div>
+            <div style="display:none">06.<input id="n6" type="text" placeholder="ex:6" /><input type="text" id="s6" placeholder="ex:31006 王大明"><br></div>
+            <div style="display:none"> 07.<input id="n7" type="text" placeholder="ex:7" /><input type="text" id="s7" placeholder="ex:31007 王大明"><br></div>
+            <div style="display:none">08.<input id="n8" type="text" placeholder="ex:8" /><input type="text" id="s8" placeholder="ex:31008 王大明"><br></div>
+            <div style="display:none">09.<input id="n9" type="text" placeholder="ex:9" /><input type="text" id="s9" placeholder="ex:31009 王大明"><br></div>
+            <div style="display:none"> 10.<input id="n10" type="text" placeholder="ex:10" /><input type="text" id="s10" placeholder="ex:31010 王大明"><br></div>
+            <div style="display:none">11.<input id="n11" type="text" placeholder="ex:11" /><input type="text" id="s11" placeholder="ex:31011 王大明"><br></div>
+            <div style="display:none">12.<input id="n12" type="text" placeholder="ex:12" /><input type="text" id="s12" placeholder="ex:31012 王大明"><br></div>
+            <div style="display:none">13.<input id="n13" type="text" placeholder="ex:13" /><input type="text" id="s13" placeholder="ex:31013 王大明"><br></div>
+            <div style="display:none">14.<input id="n14" type="text" placeholder="ex:14" /><input type="text" id="s14" placeholder="ex:31014 王大明"><br></div>
+            <div style="display:none">15.<input id="n15" type="text" placeholder="ex:15" /><input type="text" id="s15" placeholder="ex:31015 王大明"><br></div>
+            <div style="display:none">16.<input id="n16" type="text" placeholder="ex:16" /><input type="text" id="s16" placeholder="ex:31016 王大明"><br></div>
+            <div style="display:none">17.<input id="n17" type="text" placeholder="ex:17" /><input type="text" id="s17" placeholder="ex:31017 王大明"><br></div>
+            <div style="display:none">18.<input id="n18" type="text" placeholder="ex:18" /><input type="text" id="s18" placeholder="ex:31018 王大明"><br></div>
+            <div style="display:none">19.<input id="n19" type="text" placeholder="ex:19" /><input type="text" id="s19" placeholder="ex:31019 王大明"><br></div>
+            <div style="display:none">20.<input id="n20" type="text" placeholder="ex:20" /><input type="text" id="s20" placeholder="ex:31020 王大明"><br></div>
+            <br>
+            <input id="PushUser" type="button" value="增加成員" />
+            <input id="PopUser" type="button" value="減少成員" />
+            <br /><br />
+            <button id="buildClass" class="btn btn-success">創建班級</button>
+        </div>
+    </div>
+    <br>
+    <br>
+    <script>
+        var count = 16;
+        function getData() {
+            var str = $("#n1").val() + "_" + $("#s1").val();
+            for (var i = 2; i <= count; i++)
+                str += "-" + $("#n" + i).val() + "_" + $("#s" + i).val();
+            return str;
+        }
+        $(document).ready(function () {
+            for (var i = count; i >= 1; i--)
+                $("#s" + i).parent("div").show();
+            $("#PushUser").click(function () {
+                if (count < 20)
+                    $("#s" + (++count)).parent("div").show();
+                else
+                    alert("20人為班級人數的極限");
+            });
+            $("#PopUser").click(function () {
+                if (count > 2)
+                    $("#s" + (count--)).parent("div").hide();
+                else
+                    alert("2人為班級人數的最小值");
+            });
+            $("#buildClass").click(function () {
+                if ($("#newClassToken").val() != null) {
+                    $.post("/buildClass", { name: $("#newClassToken").val(), data: getData() }, function (result) {
+                        alert(result);
+                    })
+                } else
+                    alert("請填入課程代號");
+            });
+            $("#jumpPage").click(function () {
+                location.href = "http://140.116.183.54:1340/index/" + $("#classToken").val();
+                //location.href = "http://127.0.0.1:1337/index/" + $("#classToken").val();
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -3,7 +3,7 @@
 
 <head>
     <title>放假回報</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -20,7 +20,7 @@
     <div class="container" style="font-family:Microsoft JhengHei;font-size:100%">
         <div id="input" style="text-align:center">
             <label>請輸入你的學號末兩碼</label>
-            <input type="number" id="number" min="17" max="32" maxlength="2" required>
+            <input type="number" id="number">
             <br>
             <label>回報時間</label>
             <select id="select">
@@ -39,6 +39,7 @@
     </div>
     <script>
         $(document).ready(function () {
+            var token = '<%=token%>';
             var dt = new Date();
             var now = dt.getHours();
             var select = document.getElementById("select");
@@ -46,17 +47,17 @@
                 select.options[0].selected = true;
             else if (now <= 15)
                 select.options[2].selected = true;
-            else 
+            else
                 select.options[1].selected = true;
             if (localStorage.getItem("num"))
                 $("#number").val(localStorage.getItem("num"));
-            $.post("/refresh", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
+            $.post("/refresh", { token: token, when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
                 $("pre").html(result);
             })
             $("#send").click(function () {
-                if (parseInt($("#number").val()) >= 17 && parseInt($("#number").val()) <= 32) {
-                    $.post("/send", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val(), who: parseInt($("#number").val()).toString(), what: $("#text").val() }, function (result) {
-                        $.post("/refresh", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
+                if (parseInt($("#number").val()) >= 0) {
+                    $.post("/send", { token: token, when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val(), who: parseInt($("#number").val()).toString(), what: $("#text").val() }, function (result) {
+                        $.post("/refresh", { token: token, when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
                             $("pre").html(result);
                             $("#text").val('');
                         })
@@ -67,7 +68,7 @@
                 }
             });
             $("#refresh").click(function () {
-                $.post("/refresh", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
+                $.post("/refresh", { token: token, when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
                     $("pre").html(result);
                 })
             });
@@ -84,7 +85,7 @@
                 Copy($("pre").html());
             })
             $("select").change(function () {
-                $.post("/refresh", { when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
+                $.post("/refresh", { token: token, when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
                     $("pre").html(result);
                 })
             });
