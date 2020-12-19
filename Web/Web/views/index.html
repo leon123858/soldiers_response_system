@@ -89,7 +89,7 @@
                 alert("已複製好，可黏貼");
             }
             $("#duplicate").click(function () {
-                Copy($("pre").html());
+                Copy($("pre").html().replace(/<[^>]+>/g, ""));
             })
             $("select").change(function () {
                 $.post("/refresh", { token: token, when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
