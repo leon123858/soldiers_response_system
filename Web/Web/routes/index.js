@@ -2,7 +2,6 @@
 var express = require('express');
 var router = express.Router();
 const MongoClient = require("mongodb").MongoClient;
-
 // Connection URL
 //local mongoDB URL
 //const url = "mongodb://localhost:27017";
@@ -21,7 +20,7 @@ router.get("/", function (req, res) {
 /******************************************************
 post: buildClass ,use it to build a collection which can let Web know who are in the class
 db:armyUsers collection: 3B1C2(班級編號) element: num=>30, include=>31030 林俊佑
-token: 3B1C2H16 => x(營)Bx(連)Cx(班)Hx(人數)
+token: ex:3~步一~10~17~11~14~19 => (營)~(連)~(班)~(人數)~(第一時間)~(第二時間)~(第三時間)
 *******************************************************/
 router.post("/buildClass", function (req, res) {
     //name:collection name, data: the elements in collections, it is a string can be split by <-> and <_>
@@ -98,7 +97,7 @@ router.post("/send", function (req, res) {
 /*****************************************
  post:refresh => use token to find db, and use when to get goal, finally,return it
   *****************************************/
-//date + "\n步一連訓員 第2班\n今日看診人員：共0員\n發燒人員：共0員\n應到：16員 \n實到：" + result.length + "員" + str
+//date + "\n一連訓員 第2班\n今日看診人員：共0員\n發燒人員：共0員\n應到：16員 \n實到：" + result.length + "員" + str
 router.post("/refresh", function (req, res) {
     const token = req.body.token;//each class have it's own db to save data,db's name is it's token
     const when = req.body.when;
@@ -132,8 +131,10 @@ function getResponse(pkg,token,when,client) {
                 for (var i in result) json[result[i].num] = result[i].include;
                 var str = "";
                 for (var i in pkg)
-                    str += "\n" + pkg[i].include + " : " + json[pkg[i].num];
-                resolve(reply(token,when, result.length, str));
+                    str += "\n" + pkg[i].include + " : " + (json[pkg[i].num] != null ? json[pkg[i].num] : '<strong style="background-color: gray;">尚未回覆</strong>');
+                //console.log(reply(token, when, result.length, str));
+                //console.log("reply");
+                resolve(reply(token.split('~'), when, result.length, str).replace());
             }
         })
     });
@@ -142,7 +143,7 @@ function getResponse(pkg,token,when,client) {
 function reply(token,when, length, str) {
     return (
         when +
-        "\n步" + token[2] + "連訓員 第" + token[4] + "班\n今日看診人員：共0員\n發燒人員：共0員\n應到：" + token.split('H')[1] + "員 \n實到：" +
+        "\n" + decodeURI(token[1]).toString() + "連訓員 第" + token[2] + "班\n今日看診人員：共0員\n發燒人員：共0員\n應到：" + token[3] + "員 \n實到：" +
         length +
         "員" +
         str
@@ -150,59 +151,3 @@ function reply(token,when, length, str) {
 }
 
 module.exports = router;
-
-//var json = {};
-//for (var i in result) json[result[i].num] = result[i].include;
-////console.log(json);
-//var str =
-//    "\n31017 諶品勛：" +
-//    json["17"] +
-//    "\n" +
-//    "31018 吳瑞軒：" +
-//    json["18"] +
-//    "\n" +
-//    "31019 阮甯：" +
-//    json["19"] +
-//    "\n" +
-//    "31020 朱震：" +
-//    json["20"] +
-//    "\n" +
-//    "31021 林純宥：" +
-//    json["21"] +
-//    "\n" +
-//    "31022 陳忠遠：" +
-//    json["22"] +
-//    "\n" +
-//    "31023 陳柏勳：" +
-//    json["23"] +
-//    "\n" +
-//    "31024 林書逸：" +
-//    json["24"] +
-//    "\n" +
-//    "31025 吳駿：" +
-//    json["25"] +
-//    "\n" +
-//    "31026 賴昱誠：" +
-//    json["26"] +
-//    "\n" +
-//    "31027 張友直：" +
-//    json["27"] +
-//    "\n" +
-//    "31028 陳俊豪：" +
-//    json["28"] +
-//    "\n" +
-//    "31029 林昱軒：" +
-//    json["29"] +
-//    "\n" +
-//    "31030 林俊佑：" +
-//    json["30"] +
-//    "\n" +
-//    "31031 徐允璟：" +
-//    json["31"] +
-//    "\n" +
-//    "31032 林則亦：" +
-//    json["32"] +
-//    "\n";
-//client.close();
-////console.log(reply(when, result.length, str));
-//res.send(reply(when, result.length, str));

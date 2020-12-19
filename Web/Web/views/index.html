@@ -24,10 +24,9 @@
             <br>
             <label>回報時間</label>
             <select id="select">
-                <option value="11時回報">11時回報</option>
-                <option value="19時回報">19時回報</option>
-                <option value="14時回報">14時回報</option>
-                <option value="到家回報">到家回報</option>
+                <option id="option1" value=""></option>
+                <option id="option2" value=""></option>
+                <option id="option3" value=""></option>
             </select>
             <br>
             <input type="text" id="text" placeholder="請輸入回報內容">
@@ -39,16 +38,24 @@
     </div>
     <script>
         $(document).ready(function () {
-            var token = '<%=token%>';
+            var token = encodeURI('<%=token%>');
+            //console.log(token);
             var dt = new Date();
             var now = dt.getHours();
             var select = document.getElementById("select");
-            if (now <= 12)
+            const times = token.split('~');
+            $("#option1").val(times[4] + "時回報");
+            $("#option2").val(times[5] + "時回報");
+            $("#option3").val(times[6] + "時回報");
+            $("#option1").html(times[4] + "時回報");
+            $("#option2").html(times[5] + "時回報");
+            $("#option3").html(times[6] + "時回報");
+            if (now <= parseInt(times[4]) + 1)
                 select.options[0].selected = true;
-            else if (now <= 15)
-                select.options[2].selected = true;
-            else
+            else if (now <= parseInt(times[5]) + 1)
                 select.options[1].selected = true;
+            else
+                select.options[2].selected = true;
             if (localStorage.getItem("num"))
                 $("#number").val(localStorage.getItem("num"));
             $.post("/refresh", { token: token, when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {

@@ -26,7 +26,7 @@
             <hr />
             <label>新增班級回報版</label>
             <br>
-            <p>班級代號規則 -> ex:3B1C2H16 => x(營)Bx(連)Cx(班)Hx(人數)。</p>
+            <p>班級代號規則 -> ex:3~步一~10~17~11~14~19 => (營)~(連)~(班)~(人數)~(第一時間)~(第二時間)~(第三時間)。</p>
             <input type="text" id="newClassToken" placeholder="請輸入班級代號"><br>
             <label>請按照順序輸入班級內所有成員的座號(左)及資訊(右)</label><br>
             <div style="display:none">01.<input id="n1" type="text" placeholder="ex:1"/><input type="text" id="s1" placeholder="ex:31001 王大明"><br></div>
@@ -83,7 +83,7 @@
             });
             $("#buildClass").click(function () {
                 if ($("#newClassToken").val() != null) {
-                    $.post("/buildClass", { name: $("#newClassToken").val(), data: getData() }, function (result) {
+                    $.post("/buildClass", { name: encodeURI($("#newClassToken").val()), data: getData() }, function (result) {
                         alert(result);
                     })
                 } else
@@ -91,7 +91,7 @@
             });
             $("#jumpPage").click(function () {
                 location.href = "http://140.116.183.54:1340/index/" + $("#classToken").val();
-                //location.href = "http://127.0.0.1:1337/index/" + $("#classToken").val();
+                //location.href = "http://127.0.0.1:1337/index/" + encodeURI($("#classToken").val());
             });
         });
     </script>
