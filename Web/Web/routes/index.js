@@ -134,7 +134,7 @@ function getResponse(pkg,token,when,client) {
                     str += "\n" + pkg[i].include + " : " + (json[pkg[i].num] != null ? json[pkg[i].num] : '<strong style="background-color: gray;">尚未回覆</strong>');
                 //console.log(reply(token, when, result.length, str));
                 //console.log("reply");
-                resolve(reply(token.split('~'), when, result.length, str).replace());
+                resolve(reply(token.split('~'), when, result.length, str));
             }
         })
     });
