@@ -7,9 +7,9 @@ var mongoURL = 'mongodb://localhost:27017/mymondb';
 //var mongoURL = 'mongodb + srv://leon1234858:8ntscpal@cluster0.gyixj.gcp.mongodb.net/army?retryWrites=true&w=majority'
 // 用於辨識Line Channel的資訊
 var bot = linebot({
-    channelId: '1655283191',
-    channelSecret: '60e595efbfba8991732cc86d01f29a5e',
-    channelAccessToken: 'Z7EmDYofn6ew+StzJhHWHJFAfZ5oXwTLHnHKNwluQ/5UFFbdIyQvAv8F9q/sZcZtiPo66WhuhVr0omHoPEYAACMMwKA9wJKTI0gKQJSbCUeRbu3Qciql+YkjnPlXFXlYDwLEqYjyCXVahFSdG9HYDwdB04t89/1O/w1cDnyilFU='
+    channelId: '',
+    channelSecret: '',
+    channelAccessToken: ''
 });
 
 function saveMessage(db, name, date, thing,order) {

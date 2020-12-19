@@ -50,54 +50,7 @@ router.post("/refresh", async (ctx, next) => {
         var json = {};
         for (var i in result) json[result[i].num] = result[i].include;
         var str =
-          "\n31017 諶品勛：" +
-          json["17"] +
-          "\n" +
-          "31018 吳瑞軒：" +
-          json["18"] +
-          "\n" +
-          "31019 阮甯：" +
-          json["19"] +
-          "\n" +
-          "31020 朱震：" +
-          json["20"] +
-          "\n" +
-          "31021 林純宥：" +
-          json["21"] +
-          "\n" +
-          "31022 陳忠遠：" +
-          json["22"] +
-          "\n" +
-          "31023 陳柏勳：" +
-          json["23"] +
-          "\n" +
-          "31024 林書逸：" +
-          json["24"] +
-          "\n" +
-          "31025 吳駿：" +
-          json["25"] +
-          "\n" +
-          "31026 賴昱誠：" +
-          json["26"] +
-          "\n" +
-          "31027 張友直：" +
-          json["27"] +
-          "\n" +
-          "31028 陳俊豪：" +
-          json["28"] +
-          "\n" +
-          "31029 林昱軒：" +
-          json["29"] +
-          "\n" +
-          "31030 林俊佑：" +
-          json["30"] +
-          "\n" +
-          "31031 徐允璟：" +
-          json["31"] +
-          "\n" +
-          "31032 林則亦：" +
-          json["32"] +
-          "\n";
+         
         client.close();
         console.log(reply(when, result.length, str));
         return reply(when, result.length, str);
