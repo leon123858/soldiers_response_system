@@ -19,7 +19,7 @@ router.get("/", function (req, res) {
 });
 /******************************************************
 post: buildClass ,use it to build a collection which can let Web know who are in the class
-db:armyUsers collection: 3B1C2(班級編號) element: num=>30, include=>31030 林俊佑
+db:armyUsers collection: (營)~(連)~(班)~(人數)~(第一時間)~(第二時間)~(第三時間) element: num=>30, include=>31030 林小明
 token: ex:3~步一~10~17~11~14~19 => (營)~(連)~(班)~(人數)~(第一時間)~(第二時間)~(第三時間)
 *******************************************************/
 router.post("/buildClass", function (req, res) {
