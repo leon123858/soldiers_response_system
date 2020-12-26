@@ -6,7 +6,7 @@ const MongoClient = require("mongodb").MongoClient;
 //local mongoDB URL
 //const url = "mongodb://localhost:27017";
 //cloud mongoDB URL
-const url = "mongodb+srv://leon1234858:8ntscpal@cluster0.gyixj.gcp.mongodb.net/army?retryWrites=true&w=majority"
+const url = "mongodb+srv://ID:password@cluster0.gyixj.gcp.mongodb.net/army?retryWrites=true&w=majority"
 // Database Name
 const dbUsers = "armyUsers";
 
