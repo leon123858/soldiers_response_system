@@ -6,10 +6,23 @@ const MongoClient = require("mongodb").MongoClient;
 //local mongoDB URL
 //const url = "mongodb://localhost:27017";
 //cloud mongoDB URL
-const url = "mongodb+srv://ID:password@cluster0.gyixj.gcp.mongodb.net/army?retryWrites=true&w=majority"
+const url = "mongodb+srv://leon1234858:8ntscpal@cluster0.gyixj.gcp.mongodb.net/army?retryWrites=true&w=majority"
 // Database Name
 const dbUsers = "armyUsers";
 
+//translater
+const NumToCh = {
+    '1': "一",
+    '2': "二",
+    '3': "三",
+    '4': "四",
+    '5': "五",
+    '6': "六",
+    '7': "七",
+    '8': "八",
+    '9': "九",
+    '10':"十"
+}
 //the URL that we can connect to this Web(door of this Web)
 router.get("/index/:token", function (req, res) {
     res.render("index", { token: req.params.token });
@@ -120,12 +133,13 @@ function getUsers(token, client) {
     });
 }
 
-function getResponse(pkg,token,when,client) {
+function getResponse(pkg, token, when, client) {
     return new Promise((resolve, reject) => {
         var table = client.db(token).collection(when);
         table.find({}).toArray(function (err, result) {
-            if (err)
-                reject("connect error");
+            if (err) {
+                reject("connect error2");
+            }
             else {
                 var json = {};
                 for (var i in result) json[result[i].num] = result[i].include;
@@ -140,14 +154,34 @@ function getResponse(pkg,token,when,client) {
     });
 }
 
-function reply(token,when, length, str) {
-    return (
-        when +
-        "\n" + decodeURI(token[1]).toString() + "連訓員 第" + token[2] + "班\n今日看診人員：共0員\n發燒人員：共0員\n應到：" + token[3] + "員 \n實到：" +
-        length +
-        "員" +
-        str
-    );
+function reply(token, when, length, str) {
+    if (decodeURI(token[1]).toString() == '步一') {
+        return (
+            when +
+            "\n" + decodeURI(token[1]).toString() + "連訓員 第" + token[2] + "班\n今日看診人員：共0員\n發燒人員：共0員\n應到：" + token[3] + "員 \n實到：" +
+            length +
+            "員" +
+            str
+        );
+    }
+    else if (decodeURI(token[1]).toString() == '步三') {
+        return (
+            when +
+            "\n" + decodeURI(token[1]).toString() + "連訓員 第" + token[2] + "班\n今日看診人員：共0員\n發燒人員：共0員\n應到：" + token[3] + "員 \n實到：" +
+            length +
+            "員" +
+            str
+        );
+    }
+    else {
+        return (
+            (when.split(' ')[0]).split('/')[1] + '/' + (when.split(' ')[0]).split('/')[2] +
+            "" + decodeURI(token[1]).toString() + "連第" + NumToCh[token[2]] + "班 " + when.split(' ')[1] + "\n應到：" + token[3] + "員 \n實到：" +
+            length +
+            "員" +"\n感冒人數 : 0\n看診人數 : 0\n發燒人數 : 0" +
+            str.replace(/\s:\s/g, ' ')
+        )
+    }
 }
 
 module.exports = router;

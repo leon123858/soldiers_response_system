@@ -24,9 +24,6 @@
             <br>
             <label>回報時間</label>
             <select id="select">
-                <option id="option1" value=""></option>
-                <option id="option2" value=""></option>
-                <option id="option3" value=""></option>
             </select>
             <br>
             <input type="text" id="text" placeholder="請輸入回報內容">
@@ -44,18 +41,27 @@
             var now = dt.getHours();
             var select = document.getElementById("select");
             const times = token.split('~');
-            $("#option1").val(times[4] + "時回報");
-            $("#option2").val(times[5] + "時回報");
-            $("#option3").val(times[6] + "時回報");
-            $("#option1").html(times[4] + "時回報");
-            $("#option2").html(times[5] + "時回報");
-            $("#option3").html(times[6] + "時回報");
-            if (now <= parseInt(times[4]) + 1)
-                select.options[0].selected = true;
-            else if (now <= parseInt(times[5]) + 1)
-                select.options[1].selected = true;
-            else
-                select.options[2].selected = true;
+            if (decodeURI(times[1]) == '步一') {
+                for (var i = 4; i < times.length; i++) {
+                    $("#select").append("<option value= '" + times[i] + "時回報" + "'>" + times[i] + "時回報" + "</option>");
+                }
+            }
+            else if (decodeURI(times[1]) == '步三') {
+                for (var i = 4; i < times.length; i++) {
+                    $("#select").append("<option value= '" + times[i] + "00回報" + "'>" + times[i] + "00回報" + "</option>");
+                }
+            }
+            else {
+                for (var i = 4; i < times.length; i++) {
+                    $("#select").append("<option value= '" + times[i] + "30回報" + "'>" + times[i] + "30回報" + "</option>");
+                }
+            }
+            for (var i = 4; i < times.length; i++) {
+                if (now <= parseInt(times[i]) + 1) {
+                    select.options[i - 4].selected = true;
+                    break;
+                }
+            }
             if (localStorage.getItem("num"))
                 $("#number").val(localStorage.getItem("num"));
             $.post("/refresh", { token: token, when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
