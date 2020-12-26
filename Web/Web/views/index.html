@@ -27,7 +27,7 @@
             </select>
             <br>
             <input type="text" id="text" placeholder="請輸入回報內容">
-            <button id="send">傳送</button>
+            <button id="send">傳送</button> <button id="add">無發燒無感冒</button>
             <pre id="include"></pre>
             <button id="duplicate">複製</button>
             <button id="refresh">刷新</button>
@@ -67,6 +67,9 @@
             $.post("/refresh", { token: token, when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val() }, function (result) {
                 $("pre").html(result);
             })
+            $("#add").click(function () {
+                $("#text").val($("#text").val() + " 無發燒無感冒");
+            });
             $("#send").click(function () {
                 if (parseInt($("#number").val()) >= 0) {
                     $.post("/send", { token: token, when: (parseInt(dt.getFullYear()) - 1911).toString() + "/" + (parseInt(dt.getMonth()) + 1).toString() + "/" + dt.getDate().toString() + " " + $("select").val(), who: parseInt($("#number").val()).toString(), what: $("#text").val() }, function (result) {
