@@ -184,39 +184,4 @@ function reply(token, when, length, str) {
     }
 }
 
-/*****************************************
- post:refreshJSON => use token to find db, and use when to get goal, finally,return JSON
-  *****************************************/
-
-router.post("/refreshJSON", function (req, res) {
-    const token = req.body.token;//each class have it's own db to save data,db's name is it's token
-    const when = req.body.when;
-    //console.log(req.body);
-    MongoClient.connect(url, function (err, client) {
-        if (err) throw "error";
-        getUsers(token, client)
-            .then(pkg => getResponseForJson(pkg, token, when, client))
-            .then(re => res.send(re))
-            .catch(error => res.send(error));
-    });
-});
-
-function getResponseForJson(pkg, token, when, client) {
-    return new Promise((resolve, reject) => {
-        var table = client.db(token).collection(when);
-        table.find({}).toArray(function (err, result) {
-            if (err) {
-                reject("connect error2");
-            }
-            else {
-                var ReJson = {};
-                var json = {};
-                for (var i in result) json[result[i].num] = result[i].include;
-                for (var i in pkg)
-                    ReJson[pkg[i].include] = (json[pkg[i].num] != null ? json[pkg[i].num] : '尚未回覆');
-                resolve(ReJson);
-            }
-        })
-    });
-}
 module.exports = router;
