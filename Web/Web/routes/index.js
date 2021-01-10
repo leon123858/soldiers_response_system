@@ -46,6 +46,7 @@ router.post("/buildClass", function (req, res) {
             .then(bool => insertClassData(name, data, client))
             .then(bool => res.end("success"))
             .catch(bool => res.end("error"))
+            .finally(pkg => client.close());
     });
 });
 //check if this class have exist
@@ -120,7 +121,8 @@ router.post("/refresh", function (req, res) {
         getUsers(token, client)
             .then(pkg => getResponse(pkg, token, when, client))
             .then(re => res.send(re))
-            .catch(error => res.send(error));
+            .catch(error => res.send(error))
+            .finally(pkg => client.close());
     });
 });
 
@@ -196,7 +198,8 @@ router.post("/refreshJSON", function (req, res) {
         getUsers(token, client)
             .then(pkg => getResponseForJson(pkg, token, when, client))
             .then(re => res.send(re))
-            .catch(error => res.send(error));
+            .catch(error => res.send(error))
+            .finally(pkg => client.close());
     });
 });
 
