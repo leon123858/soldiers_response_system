@@ -129,7 +129,7 @@ router.post("/refresh", function (req, res) {
 function getUsers(token, client) {
     return new Promise((resolve, reject) => {
         var table = client.db(dbUsers).collection(token);
-        table.find({}).toArray(function (err, result) {
+        table.find({}).sort({ _id : 1 }).toArray(function (err, result) {
             err ? reject({ result: "connect error" }) : resolve(result);
         })
     });
